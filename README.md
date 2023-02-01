@@ -11,8 +11,9 @@
 
 #### 使用
 ```
+    import '@reginx/wip/dist/style.css'
     import WsImagePlayer from '@reginx/wip'
-    
+
     let player = new WsImagePlayer(document.querySelector('#player'), 'ws://10.8.0.65:17890', '实时预览')
     player.start()
 ```

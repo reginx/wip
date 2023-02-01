@@ -1,1 +1,233 @@
-function t(){import("data:text/javascript,")}!function(){const t=document.createElement("link").relList;if(!(t&&t.supports&&t.supports("modulepreload"))){for(const t of document.querySelectorAll('link[rel="modulepreload"]'))e(t);new MutationObserver((t=>{for(const i of t)if("childList"===i.type)for(const t of i.addedNodes)"LINK"===t.tagName&&"modulepreload"===t.rel&&e(t)})).observe(document,{childList:!0,subtree:!0})}function e(t){if(t.ep)return;t.ep=!0;const e=function(t){const e={};return t.integrity&&(e.integrity=t.integrity),t.referrerpolicy&&(e.referrerPolicy=t.referrerpolicy),"use-credentials"===t.crossorigin?e.credentials="include":"anonymous"===t.crossorigin?e.credentials="omit":e.credentials="same-origin",e}(t);fetch(t.href,e)}}();const e=[["requestFullscreen","exitFullscreen","fullscreenElement","fullscreenEnabled","fullscreenchange","fullscreenerror"],["webkitRequestFullscreen","webkitExitFullscreen","webkitFullscreenElement","webkitFullscreenEnabled","webkitfullscreenchange","webkitfullscreenerror"],["webkitRequestFullScreen","webkitCancelFullScreen","webkitCurrentFullScreenElement","webkitCancelFullScreen","webkitfullscreenchange","webkitfullscreenerror"],["mozRequestFullScreen","mozCancelFullScreen","mozFullScreenElement","mozFullScreenEnabled","mozfullscreenchange","mozfullscreenerror"],["msRequestFullscreen","msExitFullscreen","msFullscreenElement","msFullscreenEnabled","MSFullscreenChange","MSFullscreenError"]],i=(()=>{if("undefined"==typeof document)return!1;const t=e[0],i={};for(const s of e){if((null==s?void 0:s[1])in document){for(const[e,n]of s.entries())i[t[e]]=n;return i}}return!1})(),s={change:i.fullscreenchange,error:i.fullscreenerror};let n={request:(t=document.documentElement,e)=>new Promise(((s,l)=>{const a=()=>{n.off("change",a),s()};n.on("change",a);const h=t[i.requestFullscreen](e);h instanceof Promise&&h.then(a).catch(l)})),exit:()=>new Promise(((t,e)=>{if(!n.isFullscreen)return void t();const s=()=>{n.off("change",s),t()};n.on("change",s);const l=document[i.exitFullscreen]();l instanceof Promise&&l.then(s).catch(e)})),toggle:(t,e)=>n.isFullscreen?n.exit():n.request(t,e),onchange(t){n.on("change",t)},onerror(t){n.on("error",t)},on(t,e){const i=s[t];i&&document.addEventListener(i,e,!1)},off(t,e){const i=s[t];i&&document.removeEventListener(i,e,!1)},raw:i};Object.defineProperties(n,{isFullscreen:{get:()=>Boolean(document[i.fullscreenElement])},element:{enumerable:!0,get:()=>{var t;return null!=(t=document[i.fullscreenElement])?t:void 0}},isEnabled:{enumerable:!0,get:()=>Boolean(document[i.fullscreenEnabled])}}),i||(n={isEnabled:!1});const l=n;window.WsImagePlayer=class{decimalMul(t,e){var i=0,s=t.toString(),n=e.toString();try{i+=s.split(".")[1].length}catch(l){}try{i+=n.split(".")[1].length}catch(l){}return Number(s.replace(".",""))*Number(n.replace(".",""))/Math.pow(10,i)}decimalDiv(t,e){var i,s=0,n=0,l=t.toString(),a=e.toString();try{void 0!==l.split(".")[1]&&(s=l.split(".")[1].length)}catch(h){}try{void 0!==a.split(".")[1]&&(n=a.split(".")[1].length)}catch(h){}return i=Math.pow(10,Math.max(s,n)),this.decimalMul(t,i)/this.decimalMul(e,i)}createHDCanvas(t,e){var i;let s=document.createElement("canvas");return s.width=t*this.pixelRatio,s.height=e*this.pixelRatio,s.style.width=`${t}px`,s.style.height=`${e}px`,null==(i=s.getContext("2d"))||i.setTransform(this.pixelRatio,0,0,this.pixelRatio,0,0),s}adapterLayout(){var t,e;this.width=this.el.offsetWidth,this.height=this.el.offsetHeight,this.canvas.width=this.width*this.pixelRatio,this.canvas.height=this.height*this.pixelRatio,this.canvas.style.width=`${this.width}px`,this.canvas.style.height=`${this.height}px`,null==(t=this.canvas.getContext("2d"))||t.setTransform(this.pixelRatio,0,0,this.pixelRatio,0,0),this.videoWidth=this.width,this.videoHeight=parseInt(String(this.decimalDiv(this.imageHeight,this.decimalDiv(this.imageWidth,this.width)))),this.videoTop=parseInt(String(this.decimalDiv(this.height-this.videoHeight,2)));let i=this.width/3,s=Math.max(this.videoTop,30);this.statusCanvas.width=i*this.pixelRatio,this.statusCanvas.height=s*this.pixelRatio,this.statusCanvas.style.width=`${i}px`,this.statusCanvas.style.height=`${s}px`,null==(e=this.statusCanvas.getContext("2d"))||e.setTransform(this.pixelRatio,0,0,this.pixelRatio,0,0),this.statusCtx.fillStyle="#fff",this.statusFontSize=Math.max(this.statusCanvas.width/55,10)}constructor(t,e,i){if(this.title=i||"",this.pixelRatio=window.devicePixelRatio||1,this.el=t,!this.el.offsetWidth)throw new Error("el 宽度不能为 0");this.wsUrl=e,this.wsRecvAt=0,this.width=this.el.offsetWidth,this.height=this.el.offsetHeight,this.el.className=this.el.className+" wip",this.el.childNodes.forEach((t=>{var e;null==(e=this.el)||e.removeChild(t)})),this.canvas=null,this.ctx=null,this.statusCanvas=null,this.status=null,this.btn=null,this.btnMax=null,this.canvas=this.createHDCanvas(this.width,this.height),this.canvas.className="wip-video",this.el.appendChild(this.canvas),this.ctx=this.canvas.getContext("2d"),this.btn=document.createElement("button"),this.btn.className="wip-btn",this.btn.onclick=()=>{var t;this.ws&&((null==(t=this.btn)?void 0:t.className.includes("paused"))?(this.btn.className=this.btn.className.replace(" paused",""),this.videoCanPlay=!0):(this.btn.className=this.btn.className+" paused",this.videoCanPlay=!1))},this.el.appendChild(this.btn),this.titleSpan=document.createElement("span"),this.titleSpan.className="wip-title",this.titleSpan.innerText=this.ws?this.title:"loading",this.el.appendChild(this.titleSpan),this.btnMax=document.createElement("a"),this.btnMax.className="wip-btn-max",this.btnMax.innerText="全屏",this.btnMax.onclick=()=>{this.fullscreen()},this.el.appendChild(this.btnMax),this.videoCanPlay=!0}initStatus(){this.statusCanvas=this.createHDCanvas(this.width/3,Math.max(this.videoTop,30)),this.statusCanvas.className="wip-status",this.el.appendChild(this.statusCanvas),this.statusCtx=this.statusCanvas.getContext("2d"),this.statusCtx.fillStyle="#fff",this.statusFontSize=Math.max(this.statusCanvas.width/55,10)}test(){for(let t=0;t<300;t++)new WebSocket(this.wsUrl)}start(){this.ws||(this.ws=new WebSocket(this.wsUrl),this.ws.onopen=()=>{this.wsStartAt=Math.round(Number(new Date)/1e3),this.titleSpan.innerText=this.title},this.ws.onmessage=t=>{let e=Math.round(Number(new Date)/1e3);if(this.videoCanPlay){let e=new Image;e.src=window.URL.createObjectURL(t.data),e.onload=()=>{this.videoWidth||(this.imageWidth=e.naturalWidth,this.imageHeight=e.naturalHeight,this.videoWidth=this.width,this.videoHeight=parseInt(String(this.decimalDiv(this.imageHeight,this.decimalDiv(this.imageWidth,this.width)))),this.videoTop=parseInt(String(this.decimalDiv(this.height-this.videoHeight,2))),this.initStatus()),e.setAttribute("width",this.videoWidth*this.pixelRatio+"px"),e.setAttribute("height",this.videoHeight*this.pixelRatio+"px"),this.ctx.drawImage(e,0,this.videoTop>0?this.videoTop:0,this.videoWidth,this.videoHeight)}}if(this.wsRecvAt>0&&e-this.wsRecvAt>=1&&this.statusCanvas){let t="",e=this.wsRecvAt-this.wsStartAt,i=e/3600>=1?parseInt(String(e/3600)):0;t=String(i<10?"0"+i:i)+":",e%=3600;let s=e/60>=1?parseInt(String(e/60)):0;t=t+String(s<10?"0"+s:s)+":",e%=60,t+=e<10?"0"+e:e,this.statusCtx.clearRect(0,0,this.statusCanvas.offsetWidth,this.statusCanvas.offsetHeight),this.statusCtx.font=this.statusFontSize+"px sans-serif",this.statusCtx.fillText(t,10*this.pixelRatio,this.videoTop-10,80*this.pixelRatio)}this.wsRecvAt=e},this.ws.onclose=t=>{this.ws=null,this.titleSpan.innerText="loading"},this.ws.onerror=t=>{this.ws=null,this.titleSpan.innerText="loading",setTimeout((()=>{this.start()}),3e3)})}stop(){this.ws&&(this.ws.close(),this.ws=null)}fullscreen(){l.isEnabled&&(l.on("change",(()=>{this.btnMax.innerText=l.isFullscreen?"退出":"全屏",this.adapterLayout()})),l.isFullscreen?l.exit():l.request(this.el))}};export{t as __vite_legacy_guard};
+const u = [
+  [
+    "requestFullscreen",
+    "exitFullscreen",
+    "fullscreenElement",
+    "fullscreenEnabled",
+    "fullscreenchange",
+    "fullscreenerror"
+  ],
+  [
+    "webkitRequestFullscreen",
+    "webkitExitFullscreen",
+    "webkitFullscreenElement",
+    "webkitFullscreenEnabled",
+    "webkitfullscreenchange",
+    "webkitfullscreenerror"
+  ],
+  [
+    "webkitRequestFullScreen",
+    "webkitCancelFullScreen",
+    "webkitCurrentFullScreenElement",
+    "webkitCancelFullScreen",
+    "webkitfullscreenchange",
+    "webkitfullscreenerror"
+  ],
+  [
+    "mozRequestFullScreen",
+    "mozCancelFullScreen",
+    "mozFullScreenElement",
+    "mozFullScreenEnabled",
+    "mozfullscreenchange",
+    "mozfullscreenerror"
+  ],
+  [
+    "msRequestFullscreen",
+    "msExitFullscreen",
+    "msFullscreenElement",
+    "msFullscreenEnabled",
+    "MSFullscreenChange",
+    "MSFullscreenError"
+  ]
+], l = (() => {
+  if (typeof document > "u")
+    return !1;
+  const n = u[0], e = {};
+  for (const i of u)
+    if ((i == null ? void 0 : i[1]) in document) {
+      for (const [s, a] of i.entries())
+        e[n[s]] = a;
+      return e;
+    }
+  return !1;
+})(), d = {
+  change: l.fullscreenchange,
+  error: l.fullscreenerror
+};
+let h = {
+  request(n = document.documentElement, e) {
+    return new Promise((i, t) => {
+      const s = () => {
+        h.off("change", s), i();
+      };
+      h.on("change", s);
+      const a = n[l.requestFullscreen](e);
+      a instanceof Promise && a.then(s).catch(t);
+    });
+  },
+  exit() {
+    return new Promise((n, e) => {
+      if (!h.isFullscreen) {
+        n();
+        return;
+      }
+      const i = () => {
+        h.off("change", i), n();
+      };
+      h.on("change", i);
+      const t = document[l.exitFullscreen]();
+      t instanceof Promise && t.then(i).catch(e);
+    });
+  },
+  toggle(n, e) {
+    return h.isFullscreen ? h.exit() : h.request(n, e);
+  },
+  onchange(n) {
+    h.on("change", n);
+  },
+  onerror(n) {
+    h.on("error", n);
+  },
+  on(n, e) {
+    const i = d[n];
+    i && document.addEventListener(i, e, !1);
+  },
+  off(n, e) {
+    const i = d[n];
+    i && document.removeEventListener(i, e, !1);
+  },
+  raw: l
+};
+Object.defineProperties(h, {
+  isFullscreen: {
+    get: () => Boolean(document[l.fullscreenElement])
+  },
+  element: {
+    enumerable: !0,
+    get: () => {
+      var n;
+      return (n = document[l.fullscreenElement]) != null ? n : void 0;
+    }
+  },
+  isEnabled: {
+    enumerable: !0,
+    get: () => Boolean(document[l.fullscreenEnabled])
+  }
+});
+l || (h = { isEnabled: !1 });
+const o = h;
+class f {
+  decimalMul(e, i) {
+    var t = 0, s = e.toString(), a = i.toString();
+    try {
+      t += s.split(".")[1].length;
+    } catch {
+    }
+    try {
+      t += a.split(".")[1].length;
+    } catch {
+    }
+    return Number(s.replace(".", "")) * Number(a.replace(".", "")) / Math.pow(10, t);
+  }
+  decimalDiv(e, i) {
+    var t = 0, s = 0, a, r = e.toString(), c = i.toString();
+    try {
+      r.split(".")[1] !== void 0 && (t = r.split(".")[1].length);
+    } catch {
+    }
+    try {
+      c.split(".")[1] !== void 0 && (s = c.split(".")[1].length);
+    } catch {
+    }
+    return a = Math.pow(10, Math.max(t, s)), this.decimalMul(e, a) / this.decimalMul(i, a);
+  }
+  createHDCanvas(e, i) {
+    var s;
+    let t = document.createElement("canvas");
+    return t.width = e * this.pixelRatio, t.height = i * this.pixelRatio, t.style.width = `${e}px`, t.style.height = `${i}px`, (s = t.getContext("2d")) == null || s.setTransform(this.pixelRatio, 0, 0, this.pixelRatio, 0, 0), t;
+  }
+  adapterLayout() {
+    var t, s;
+    this.width = this.el.offsetWidth, this.height = this.el.offsetHeight, this.canvas.width = this.width * this.pixelRatio, this.canvas.height = this.height * this.pixelRatio, this.canvas.style.width = `${this.width}px`, this.canvas.style.height = `${this.height}px`, (t = this.canvas.getContext("2d")) == null || t.setTransform(this.pixelRatio, 0, 0, this.pixelRatio, 0, 0), this.videoWidth = this.width, this.videoHeight = parseInt(
+      String(
+        this.decimalDiv(
+          this.imageHeight,
+          this.decimalDiv(this.imageWidth, this.width)
+        )
+      )
+    ), this.videoTop = parseInt(String(this.decimalDiv(this.height - this.videoHeight, 2)));
+    let e = this.width / 3, i = Math.max(this.videoTop, 30);
+    this.statusCanvas.width = e * this.pixelRatio, this.statusCanvas.height = i * this.pixelRatio, this.statusCanvas.style.width = `${e}px`, this.statusCanvas.style.height = `${i}px`, (s = this.statusCanvas.getContext("2d")) == null || s.setTransform(this.pixelRatio, 0, 0, this.pixelRatio, 0, 0), this.statusCtx.fillStyle = "#fff", this.statusFontSize = Math.max(this.statusCanvas.width / 55, 10);
+  }
+  constructor(e, i, t) {
+    if (this.title = t || "", this.pixelRatio = window.devicePixelRatio || 1, this.el = e, !this.el.offsetWidth)
+      throw new Error("el \u5BBD\u5EA6\u4E0D\u80FD\u4E3A 0");
+    this.wsUrl = i, this.wsRecvAt = 0, this.width = this.el.offsetWidth, this.height = this.el.offsetHeight, this.el.className = this.el.className + " wip", this.el.childNodes.forEach((s) => {
+      var a;
+      (a = this.el) == null || a.removeChild(s);
+    }), this.canvas = null, this.ctx = null, this.statusCanvas = null, this.status = null, this.btn = null, this.btnMax = null, this.canvas = this.createHDCanvas(this.width, this.height), this.canvas.className = "wip-video", this.el.appendChild(this.canvas), this.ctx = this.canvas.getContext("2d"), this.btn = document.createElement("button"), this.btn.className = "wip-btn", this.btn.onclick = () => {
+      var s;
+      this.ws && ((s = this.btn) != null && s.className.includes("paused") ? (this.btn.className = this.btn.className.replace(" paused", ""), this.videoCanPlay = !0) : (this.btn.className = this.btn.className + " paused", this.videoCanPlay = !1));
+    }, this.el.appendChild(this.btn), this.titleSpan = document.createElement("span"), this.titleSpan.className = "wip-title", this.titleSpan.innerText = this.ws ? this.title : "loading", this.el.appendChild(this.titleSpan), this.btnMax = document.createElement("a"), this.btnMax.className = "wip-btn-max", this.btnMax.innerText = "\u5168\u5C4F", this.btnMax.onclick = () => {
+      this.fullscreen();
+    }, this.el.appendChild(this.btnMax), this.videoCanPlay = !0;
+  }
+  initStatus() {
+    this.statusCanvas = this.createHDCanvas(this.width / 3, Math.max(this.videoTop, 30)), this.statusCanvas.className = "wip-status", this.el.appendChild(this.statusCanvas), this.statusCtx = this.statusCanvas.getContext("2d"), this.statusCtx.fillStyle = "#fff", this.statusFontSize = Math.max(this.statusCanvas.width / 55, 10);
+  }
+  test() {
+    for (let e = 0; e < 300; e++)
+      new WebSocket(this.wsUrl);
+  }
+  start() {
+    this.ws || (this.ws = new WebSocket(this.wsUrl), this.ws.onopen = () => {
+      this.wsStartAt = Math.round(Number(new Date()) / 1e3), this.titleSpan.innerText = this.title;
+    }, this.ws.onmessage = (e) => {
+      let i = Math.round(Number(new Date()) / 1e3);
+      if (this.videoCanPlay) {
+        let t = new Image();
+        t.src = window.URL.createObjectURL(e.data), t.onload = () => {
+          this.videoWidth || (this.imageWidth = t.naturalWidth, this.imageHeight = t.naturalHeight, this.videoWidth = this.width, this.videoHeight = parseInt(
+            String(
+              this.decimalDiv(
+                this.imageHeight,
+                this.decimalDiv(this.imageWidth, this.width)
+              )
+            )
+          ), this.videoTop = parseInt(String(this.decimalDiv(this.height - this.videoHeight, 2))), this.initStatus()), t.setAttribute("width", this.videoWidth * this.pixelRatio + "px"), t.setAttribute("height", this.videoHeight * this.pixelRatio + "px"), this.ctx.drawImage(
+            t,
+            0,
+            this.videoTop > 0 ? this.videoTop : 0,
+            this.videoWidth,
+            this.videoHeight
+          );
+        };
+      }
+      if (this.wsRecvAt > 0 && i - this.wsRecvAt >= 1 && this.statusCanvas) {
+        let t = "", s = this.wsRecvAt - this.wsStartAt, a = s / 3600 >= 1 ? parseInt(String(s / 3600)) : 0;
+        t = String(a < 10 ? "0" + a : a) + ":", s = s % 3600;
+        let r = s / 60 >= 1 ? parseInt(String(s / 60)) : 0;
+        t = t + String(r < 10 ? "0" + r : r) + ":", s = s % 60, t = t + (s < 10 ? "0" + s : s), this.statusCtx.clearRect(0, 0, this.statusCanvas.offsetWidth, this.statusCanvas.offsetHeight), this.statusCtx.font = this.statusFontSize + "px sans-serif", this.statusCtx.fillText(t, 10 * this.pixelRatio, this.videoTop - 10, 80 * this.pixelRatio);
+      }
+      this.wsRecvAt = i;
+    }, this.ws.onclose = (e) => {
+      console.log(e), this.ws = null, this.titleSpan.innerText = "loading";
+    }, this.ws.onerror = (e) => {
+      console.log(e), this.ws = null, this.titleSpan.innerText = "loading", setTimeout(() => {
+        this.start();
+      }, 3e3);
+    });
+  }
+  stop() {
+    this.ws && (this.ws.close(), this.ws = null);
+  }
+  fullscreen() {
+    o.isEnabled && (o.on("change", () => {
+      this.btnMax.innerText = o.isFullscreen ? "\u9000\u51FA" : "\u5168\u5C4F", this.adapterLayout();
+    }), o.isFullscreen ? o.exit() : o.request(this.el));
+  }
+}
+window.WsImagePlayer = f;
+export {
+  f as default
+};

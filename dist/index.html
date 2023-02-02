@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Vite + TS</title>
+  </head>
+  <body>
+    <div id="player" style="width: 360px; height: 240px; margin: 0 auto"></div>
+    <script type="module" src="/src/main.ts"></script>
+    <script>
+      window.onload = function () {
+        let player = new WsImagePlayer(document.querySelector('#player'), 'ws://10.8.0.65:17890', 'AI实时预览')
+        player.start()
+      }
+    </script>
+  </body>
+
+</html>

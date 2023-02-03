@@ -57,6 +57,8 @@ class WsImagePlayer {
   // video title
   protected declare btnMax: HTMLAnchorElement | null
 
+  protected declare isDestoryed: boolean
+
   /**
    * 乘
    * @param {*} arg1
@@ -227,6 +229,7 @@ class WsImagePlayer {
     this.el!.appendChild(this.btnMax)
 
     this.videoCanPlay = true
+    this.isDestoryed = false
   }
 
   /**
@@ -263,6 +266,10 @@ class WsImagePlayer {
       }
 
       this.ws.onmessage = e => {
+        if (this.isDestoryed) {
+          this.ws?.close()
+          return
+        }
         let timeNow = Math.round(Number(new Date()) / 1000)
         if (this.videoCanPlay) {
           let image = new Image()
@@ -328,9 +335,11 @@ class WsImagePlayer {
         console.log(e)
         this.ws = null
         this.titleSpan!.innerText = 'loading'
-        setTimeout(() => {
-          this.start()
-        }, 3000)
+        if (!this.isDestoryed) {
+          setTimeout(() => {
+            this.start()
+          }, 3000)
+        }
       }
     }
   }
@@ -338,10 +347,11 @@ class WsImagePlayer {
   /**
    * 结束
    */
-  stop () {
+  destory () {
     if (this.ws) {
       this.ws.close()
       this.ws = null
+      this.isDestoryed = true
     }
   }
 

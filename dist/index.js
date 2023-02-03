@@ -170,7 +170,7 @@ class f {
       this.ws && ((t = this.btn) != null && t.className.includes("paused") ? (this.btn.className = this.btn.className.replace(" paused", ""), this.videoCanPlay = !0) : (this.btn.className = this.btn.className + " paused", this.videoCanPlay = !1));
     }, this.el.appendChild(this.btn), this.titleSpan = document.createElement("span"), this.titleSpan.className = "wip-title", this.titleSpan.innerText = this.ws ? this.title : "loading", this.el.appendChild(this.titleSpan), this.btnMax = document.createElement("a"), this.btnMax.className = "wip-btn-max", this.btnMax.innerText = "\u5168\u5C4F", this.btnMax.onclick = () => {
       this.fullscreen();
-    }, this.el.appendChild(this.btnMax), this.videoCanPlay = !0, this.isDestoryed = !1;
+    }, this.el.appendChild(this.btnMax), this.videoCanPlay = !0, this.isDestroyed = !1;
   }
   initStatus() {
     this.statusCanvas = this.createHDCanvas(this.width / 3, Math.max(this.videoTop, 30)), this.statusCanvas.className = "wip-status", this.el.appendChild(this.statusCanvas), this.statusCtx = this.statusCanvas.getContext("2d"), this.statusCtx.fillStyle = "#fff", this.statusFontSize = Math.max(this.statusCanvas.width / 55, 10);
@@ -184,7 +184,7 @@ class f {
       this.wsStartAt = Math.round(Number(new Date()) / 1e3), this.titleSpan.innerText = this.title;
     }, this.ws.onmessage = (e) => {
       var i;
-      if (this.isDestoryed) {
+      if (this.isDestroyed) {
         (i = this.ws) == null || i.close();
         return;
       }
@@ -218,13 +218,13 @@ class f {
     }, this.ws.onclose = (e) => {
       console.log(e), this.ws = null, this.titleSpan.innerText = "loading";
     }, this.ws.onerror = (e) => {
-      console.log(e), this.ws = null, this.titleSpan.innerText = "loading", this.isDestoryed || setTimeout(() => {
+      console.log(e), this.ws = null, this.titleSpan.innerText = "loading", this.isDestroyed || setTimeout(() => {
         this.start();
       }, 3e3);
     });
   }
-  destory() {
-    this.ws && (this.ws.close(), this.ws = null, this.isDestoryed = !0);
+  destroy() {
+    this.ws && (this.ws.close(), this.ws = null, this.isDestroyed = !0);
   }
   fullscreen() {
     c.isEnabled && (c.on("change", () => {

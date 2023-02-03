@@ -57,7 +57,7 @@ class WsImagePlayer {
   // video title
   protected declare btnMax: HTMLAnchorElement | null
 
-  protected declare isDestoryed: boolean
+  protected declare isDestroyed: boolean
 
   /**
    * 乘
@@ -229,7 +229,7 @@ class WsImagePlayer {
     this.el!.appendChild(this.btnMax)
 
     this.videoCanPlay = true
-    this.isDestoryed = false
+    this.isDestroyed = false
   }
 
   /**
@@ -266,7 +266,7 @@ class WsImagePlayer {
       }
 
       this.ws.onmessage = e => {
-        if (this.isDestoryed) {
+        if (this.isDestroyed) {
           this.ws?.close()
           return
         }
@@ -335,7 +335,7 @@ class WsImagePlayer {
         console.log(e)
         this.ws = null
         this.titleSpan!.innerText = 'loading'
-        if (!this.isDestoryed) {
+        if (!this.isDestroyed) {
           setTimeout(() => {
             this.start()
           }, 3000)
@@ -347,11 +347,11 @@ class WsImagePlayer {
   /**
    * 结束
    */
-  destory () {
+  destroy () {
     if (this.ws) {
       this.ws.close()
       this.ws = null
-      this.isDestoryed = true
+      this.isDestroyed = true
     }
   }
 

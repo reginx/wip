@@ -1,6 +1,7 @@
 # ws-image-player
 
 #### 介绍
+
 通过websocket接收图片二进制内容进行渲染的简单播放器
 
 #### 安装
@@ -15,5 +16,10 @@
     import WsImagePlayer from '@reginx/wip'
 
     let player = new WsImagePlayer(document.querySelector('#player'), 'ws://10.8.0.65:17890', '实时预览')
+    // play
     player.start()
+
+    // destory
+    player.destory()
+
 ```
